@@ -1,5 +1,6 @@
 package Tests;
 
+import PageObjects.BingPage;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
@@ -15,6 +16,7 @@ public class BingTest {
 
     Browser browser;
     Page page;
+    BingPage bing;
 
     @BeforeEach
     public void before() {
@@ -24,6 +26,7 @@ public class BingTest {
                         .setHeadless(false)
                         .setChannel("chrome"));
         page = browser.newPage();
+        bing = new BingPage();
     }
 
     @Test
@@ -36,8 +39,12 @@ public class BingTest {
     @Test
     @DisplayName("Search for Bing")
     public void bingTest() {
-        page.navigate("https://www.bing.com/");
+        page.navigate(bing.getUrl());
         page.screenshot(new Page.ScreenshotOptions().setPath(Paths.get("bing.png")));
+        page.click(bing.getSeachTextbox());
+        page.locator(bing.getSeachTextbox()).fill("playwright");
+        page.locator(bing.getSeachIcon()).click();
+        page.screenshot(new Page.ScreenshotOptions().setPath(Paths.get("searchresults.png")));
     }
 
     @AfterEach
